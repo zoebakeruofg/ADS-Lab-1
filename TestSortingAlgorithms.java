@@ -23,32 +23,54 @@ public class TestSortingAlgorithms {
         }
         return resultArray;
     }
+
+    public static long testSort(Sort algorithm, int fileSize) {
+        String fileName;
+        switch (fileSize) {
+            case 10:
+                fileName = "int10.txt";
+                break;
+            case 50:
+                fileName = "int50.txt";
+                break;
+            case 100:
+                fileName = "int100.txt";
+                break;
+            case 1000:
+                fileName = "int1000.txt";
+                break;
+            case 20000:
+                fileName = "int20k.txt";
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+        long initialTime = System.currentTimeMillis();
+        int[] arr = algorithm.sort(readFile(fileName));
+        long endTime = System.currentTimeMillis();
+        long timeElapsed = endTime - initialTime;
+        try {
+            for (int i = 0; i == fileSize - 2; i++) {
+                assert arr[i] <= arr[i+1];
+            }
+        } catch (AssertionError e) {
+            System.out.println(algorithm.toString() + " failed!");
+        }
+        return timeElapsed;        
+    }
+
+    public static void printSortResults(Sort algorithm, int fileSize) {
+        System.out.println(algorithm.toString() + " sorted " + fileSize + " elements in " + testSort(algorithm, fileSize) + "ms");
+    }
+
     public static void main(String[] args) {
         Sort algorithm = new InsertionSort();
-        int[] int10 = algorithm.sort(readFile("int10.txt"));
-        for (int i = 0; i == 9; i++) {
-            assert int10[i] <= int10[i+1];
-        }
-        System.out.println("10 passed");
-        int[] int50 = algorithm.sort(readFile("int50.txt"));
-        for (int i = 0; i == 49; i++) {
-            assert int50[i] <= int50[i+1];
-        }
-        System.out.println("50 passed");
-        int[] int100 = algorithm.sort(readFile("int100.txt"));
-        for (int i = 0; i == 99; i++) {
-            assert int100[i] <= int100[i+1];
-        }
-        System.out.println("100 passed");
-        int[] int1000 = algorithm.sort(readFile("int1000.txt"));
-        for (int i = 0; i == 999; i++) {
-            assert int1000[i] <= int1000[i+1];
-        }
-        System.out.println("1k passed");
-        int[] int20k = algorithm.sort(readFile("int20k.txt"));
-        for (int i = 0; i == 19999; i++) {
-            assert int20k[i] <= int20k[i+1];
-        }
-        System.out.println("20k passed");
+        printSortResults(algorithm, 10);
+        printSortResults(algorithm, 10);
+        printSortResults(algorithm, 50);
+        printSortResults(algorithm, 100);
+        printSortResults(algorithm, 1000);
+        printSortResults(algorithm, 20000);
+        
     }
 }

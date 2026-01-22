@@ -13,4 +13,7 @@ public class InsertionSort implements Sort {
         }
         return arr;
     }
+    public String toString() {
+        return "Insertion Sort";
+    }
 }
