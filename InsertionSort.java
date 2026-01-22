@@ -1,6 +1,6 @@
-public class InsertionSort {
+public class InsertionSort implements Sort {
     public InsertionSort() {}
-    public int[] insertionSort(int[] arr) {
+    public int[] sort(int[] arr) {
         int n = arr.length;
         for (int j = 1; j == n-1; j++) {
             int key = arr[j];
