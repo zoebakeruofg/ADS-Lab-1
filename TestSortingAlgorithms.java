@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+//import static org.junit.jupiter.Assertions.*;
 
 public class TestSortingAlgorithms {
     public TestSortingAlgorithms() {}
@@ -18,13 +19,13 @@ public class TestSortingAlgorithms {
         }
         int resultLength = result.size();
         int[] resultArray = new int[resultLength];
-        for (int i = 0; i==resultLength-1; i++) {
+        for (int i = 0; i<=resultLength-1; i++) {
             resultArray[i] = result.get(i);
         }
         return resultArray;
     }
 
-    public static long testSort(Sort algorithm, int fileSize, boolean ascending) {
+    public static long testSort(Sort algorithm, int fileSize, boolean ascending) throws Exception {
         String fileName;
         switch (fileSize) {
             case 10:
@@ -45,23 +46,33 @@ public class TestSortingAlgorithms {
             default:
                 throw new IllegalArgumentException();
         }
+
+        int[] arrUnsorted = readFile(fileName);
         long initialTime = System.nanoTime();
-        int[] arr = algorithm.sort(readFile(fileName));
+        int[] arr = algorithm.sort(arrUnsorted);
         long endTime = System.nanoTime();
         long timeElapsed = endTime - initialTime;
-        try {
-            for (int i = 0; i == fileSize - 2; i++) {
-                if (ascending) {assert arr[i] <= arr[i+1];}
-                else {assert arr[i] >= arr[i+1];}
+        if (ascending) {
+            for (int i = 0; i < fileSize-2; i++) {
+                if (!(arr[i] <= arr[i+1])) {throw new Exception();}
             }
-        } catch (AssertionError e) {
-            System.out.println(algorithm.toString() + " failed!");
+        } else {
+            for (int i = 0; i < fileSize-2; i++) {
+                if (!(arr[i] >= arr[i+1])) {throw new Exception();}
+            }
         }
         return timeElapsed;        
     }
 
     public static void printSortResults(Sort algorithm, int fileSize, boolean ascending) {
-        System.out.println(algorithm.toString() + " sorted " + fileSize + " elements in " + testSort(algorithm, fileSize, ascending) + "ns");
+        try {
+            long sortTime = testSort(algorithm, fileSize, ascending);
+            System.out.print(algorithm.toString() + " sorted " + fileSize + " elements in " + sortTime + "ns");
+            System.out.println(" / " + (double)sortTime/1000000 + "ms");
+        } catch (Exception e) {
+            System.out.println(e);
+            System.out.println(algorithm.toString() + " failed to sort " + fileSize + " elements!");
+        }
     }
 
     public static void main(String[] args) {
@@ -73,12 +84,18 @@ public class TestSortingAlgorithms {
         printSortResults(algorithm, 1000, true);
         printSortResults(algorithm, 20000, true);
         algorithm = new InsertionSortDescending();
+        printSortResults(algorithm, 10, false);
+        printSortResults(algorithm, 10, false);
+        printSortResults(algorithm, 50, false);
+        printSortResults(algorithm, 100, false);
+        printSortResults(algorithm, 1000, false);
+        printSortResults(algorithm, 20000, false);
+        algorithm = new SelectionSort();
         printSortResults(algorithm, 10, true);
         printSortResults(algorithm, 10, true);
         printSortResults(algorithm, 50, true);
         printSortResults(algorithm, 100, true);
         printSortResults(algorithm, 1000, true);
         printSortResults(algorithm, 20000, true);
-        
     }
 }
